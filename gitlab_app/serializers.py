@@ -5,4 +5,5 @@ from validate_email import validate_email
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 
-# class GitlabSerializer(serializers.ModelSerializer):
+class GitlabSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()

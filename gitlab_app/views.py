@@ -18,12 +18,15 @@ import hashlib
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 import base64
 import os
+from .serializers import GitlabSerializer
 
 STATUS_RESOLVED = 'Resolved'
 STATUS_PROGRESS = 'In_progress'
 
 oauth_token = ''
 class Gitlab_webhookAPIView(generics.GenericAPIView):
+    serializer_class = GitlabSerializer
+
     client_id = os.environ.get('AREA2_GITLAB_ID')
     client_secret = os.environ.get('AREA2_GITLAB_TOKEN')
 
