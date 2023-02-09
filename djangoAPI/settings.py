@@ -113,7 +113,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoAPI.wsgi.application'
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
