@@ -1,4 +1,4 @@
-Django==4.1.5
+Django==4.1.6
 django-allauth==0.52.0
 django-cors-headers==3.13.0
 django-crispy-forms==1.14.0
@@ -27,4 +27,6 @@ dj-database-url==0.5.0
 django-postgres-copy==2.3.1
 psycopg2==2.7.4
 python-dateutil==2.7.0
-
+django_heroku==0.3.1
+dj-database-url==1.2.0
+psycopg2-binary==2.9.5
