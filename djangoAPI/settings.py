@@ -25,9 +25,18 @@ django_heroku.settings(locals())
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9o99wm(p!x&zz5yk(=vz_q1jj0mxjnfyp-v5=f!3$a%5&0gzc='
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+IS_HEROKU = "DYNO" in os.environ
 
+
+# Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
+if IS_HEROKU:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = []
+
+# SECURITY WARNING: don't run with debug turned on in production!
+if not IS_HEROKU:
+    DEBUG = True
 ALLOWED_HOSTS = ['54f0-154-66-134-64.eu.ngrok.io', '127.0.0.1', '.herokuapp.com']
 
 AUTH_USER_MODEL = 'areaServer.User'
