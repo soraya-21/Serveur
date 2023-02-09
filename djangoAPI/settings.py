@@ -17,7 +17,7 @@ import django_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), staticfiles=False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
