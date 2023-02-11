@@ -51,33 +51,34 @@ class Gitlab_webhookAPIView(generics.GenericAPIView):
                 reponse_data = {
                     "code": request.GET.get('code')
                 }
-                data = {
-                    'grant_type': 'authorization_code',
-                    'code': reponse_data("code"),
-                    'client_id': self.client_id,
-                    'client_secret': self.client_secret,
-                    'redirect_uri': 'https://127.0.0.1:8000/gitlab-webhook/'
-                }
-                response = requests.post('https://gitlab.com/oauth/token', data=data)
-                if response.status_code != 200:
-                    print(f'Error: {response.json()}')
-                else:
-                    oauth_token = response.json()['access_token']
-                    print(f'Access token: {oauth_token}')
-                gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
-                projects = gl.projects.list(owned=True)
-                webhook_url = "https://a2d6-197-234-221-22.eu.ngrok.io/gitlab-webhook/"
-                for project in projects:
-                    hook = project.hooks.create({
-                        'url': webhook_url,
-                        'push_events': True,
-                        'merge_requests_events': True,
-                        'pipeline_events': True,
-                        'enable_ssl_verification': True
-                    })
-                    print(f'Webhook ajouté au projet {project.name} avec l\'URL {hook.url}')
             except:
                 return HttpResponse("No code found", status=400)
+            print (reponse_data["code"])
+            data = {
+                'grant_type': 'authorization_code',
+                'code': reponse_data["code"],
+                'client_id': self.client_id,
+                'client_secret': self.client_secret,
+                'redirect_uri': 'http://127.0.0.1:8000/gitlab-webhook/'
+            }
+            response = requests.post('https://gitlab.com/oauth/token', data=data)
+            if response.status_code != 200:
+                print(f'Error: {response.json()}')
+            else:
+                oauth_token = response.json()['access_token']
+                print(f'Access token: {oauth_token}')
+            gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
+            projects = gl.projects.list(owned=True)
+            webhook_url = "https://3ea5-156-0-212-12.ngrok.io/gitlab-webhook/"
+            for project in projects:
+                hook = project.hooks.create({
+                    'url': webhook_url,
+                    'push_events': True,
+                    'merge_requests_events': True,
+                    'pipeline_events': True,
+                    'enable_ssl_verification': True
+                })
+                print(f'Webhook ajouté au projet {project.name} avec l\'URL {hook.url}')
         elif request.method == "POST":
             payload = request.data
 

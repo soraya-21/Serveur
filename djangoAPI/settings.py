@@ -37,7 +37,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 if not IS_HEROKU:
     DEBUG = True
-ALLOWED_HOSTS = ['6056-156-0-212-12.ngrok.io', '127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['3ea5-156-0-212-12.ngrok.io', '127.0.0.1', '.herokuapp.com']
 
 AUTH_USER_MODEL = 'areaServer.User'
 
