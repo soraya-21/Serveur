@@ -7,3 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 class GitlabSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields=("username", "email", "password")

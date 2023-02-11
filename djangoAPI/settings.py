@@ -37,7 +37,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 if not IS_HEROKU:
     DEBUG = True
-ALLOWED_HOSTS = ['54f0-154-66-134-64.eu.ngrok.io', '127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['6056-156-0-212-12.ngrok.io', '127.0.0.1', '.herokuapp.com']
 
 AUTH_USER_MODEL = 'areaServer.User'
 
@@ -63,8 +63,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'whitenoise.django',
-    "django-heroku"
+    'whitenoise',
+    "django_heroku"
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -117,23 +117,23 @@ WSGI_APPLICATION = 'djangoAPI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME' : "AREA",
-        'CLIENT': {
-            "host": "mongodb+srv://areadatabase:areadatabase@cluster0.lpn6dup.mongodb.net/?retryWrites=true&w=majority",
-            "authMechanism": "SCRAM-SHA-1"
-        }
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME':os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'ENGINE': 'djongo',
+#         'NAME' : "AREA",
+#         'CLIENT': {
+#             "host": "mongodb+srv://areadatabase:areadatabase@cluster0.lpn6dup.mongodb.net/?retryWrites=true&w=majority",
+#             "authMechanism": "SCRAM-SHA-1"
+#         }
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 
 REST_FRAMEWORK = {
