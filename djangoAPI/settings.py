@@ -117,23 +117,23 @@ WSGI_APPLICATION = 'djangoAPI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'djongo',
-#         'NAME' : "AREA",
-#         'CLIENT': {
-#             "host": "mongodb+srv://areadatabase:areadatabase@cluster0.lpn6dup.mongodb.net/?retryWrites=true&w=majority",
-#             "authMechanism": "SCRAM-SHA-1"
-#         }
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME':os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo',
+        'NAME' : "AREA",
+        'CLIENT': {
+            "host": "mongodb+srv://areadatabase:areadatabase@cluster0.lpn6dup.mongodb.net/?retryWrites=true&w=majority",
+            "authMechanism": "SCRAM-SHA-1"
+        }
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME':os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 REST_FRAMEWORK = {
