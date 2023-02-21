@@ -37,7 +37,7 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 if not IS_HEROKU:
     DEBUG = True
-ALLOWED_HOSTS = ['3ea5-156-0-212-12.ngrok.io', '127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['9463-156-0-212-43.ngrok.io', '127.0.0.1', '.herokuapp.com']
 
 AUTH_USER_MODEL = 'areaServer.User'
 
@@ -46,6 +46,7 @@ AUTH_USER_MODEL = 'areaServer.User'
 SITE_ID = 2
 
 INSTALLED_APPS = [
+    'mailsender.apps.MailsenderConfig',
     'drf_yasg',
     'rest_framework',
     'corsheaders',
@@ -122,7 +123,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME' : "AREA",
         'CLIENT': {
-            "host": "mongodb+srv://areadatabase:areadatabase@cluster0.lpn6dup.mongodb.net/?retryWrites=true&w=majority",
+            "host": "mongodb+srv://areadatabase:areadatabase@cluster0.lpn6dup.mongodb.net/?retryWrites=false&w=majority",
             "authMechanism": "SCRAM-SHA-1"
         }
     }
