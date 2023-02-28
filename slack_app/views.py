@@ -14,7 +14,7 @@ import requests
 class slack_webhookAPIView(generics.GenericAPIView):
     serializer_class = slackSerializer
     
-    def get_token(self, request)
+    def get_token(self, request):
         if request.method == "GET":
             try:
                 reponse_data = {
