@@ -15,6 +15,7 @@ from rest_framework.response import Response
 import os
 from .serializers import GitlabSerializer
 from areaServer.models import User
+from mailsender.views import mail_sender
 
 # Create your views here.
 
@@ -72,22 +73,28 @@ class Gitlab_push_webhookAPIView(generics.GenericAPIView):
                 print(f'Access token: {oauth_token}')
             url = 'https://gitlab.com/api/v4/user'
             # Send the request to the GitLab API
-            response = requests.get(f'{url}?private_token={oauth_token}')
-
+            headers = {
+                "Authorization": "Bearer {}".format(oauth_token)
+            }
+            response = requests.get(url, headers=headers)
+            print(response)
             # Parse the JSON response to get the user's email
-            email = response.json()['email']
-            user = User.objects.filter(email=email).first()
-            if not user:
-                return ("User not in db")
-            else:
-                user.gitlab_tokens = {
-                    "gitlab_access_token" : oauth_token,
-                    "gitlab_refresh_token" : refresh_token
-                }
-                user.save()
+            if response.status_code == 200:
+                email = response.json()['email']
+            #     user = User.objects.filter(email=email).first()
+            #     if not user:
+            #         return ("User not in db")
+            #     else:
+            #         user.gitlab_tokens = {
+            #             "gitlab_access_token" : oauth_token,
+            #             "gitlab_refresh_token" : refresh_token
+            #         }
+            #         user.save()
+            # else:
+            #     raise ValueError("Could retrieve user email")
             gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
             projects = gl.projects.list(owned=True)
-            webhook_url = "https://9463-156-0-212-43.ngrok.io/gitlab-webhook/push_rea"
+            webhook_url = " https://f957-41-138-89-210.ngrok.io/gitlab-webhook/push_rea"
             for project in projects:
                 hook = project.hooks.create({
                     'url': webhook_url,
@@ -103,7 +110,7 @@ class Gitlab_push_webhookAPIView(generics.GenericAPIView):
                 user_email = payload["user_email"]
             except:
                 return HttpResponse("Couldn't get user email from payload")
-            oauth_token = get_token_in_db(user_email)
+            # oauth_token = get_token_in_db(user_email)
 
             if payload['object_kind'] == 'push':
                 repo_meta = {
@@ -112,8 +119,10 @@ class Gitlab_push_webhookAPIView(generics.GenericAPIView):
             else:
                 return HttpResponseBadRequest("Unsupported object kind", 422)
             
+
             if payload['object_kind'] == 'push':
                 try:
+                    # mail_sender()
                     email_body= f'New push on {payload["project"]["name"]} on branch "{payload["ref"]}". Commit title was "{payload["commits"][0]["title"]}".\nModified files: ({payload["commits"][0]["modified"]}). You can access your commit using the link below {payload["commits"][0]["url"]}'
                     data = {
                         'email_subject':'Push notification on gitlab',
@@ -165,7 +174,11 @@ class Gitlab_MR_Opened_webhookAPIView(generics.GenericAPIView):
                 print(f'Access token: {oauth_token}')
             url = 'https://gitlab.com/api/v4/user'
             # Send the request to the GitLab API
-            response = requests.get(f'{url}?private_token={oauth_token}')
+            headers = {
+                "Authorization": "Bearer {}".format(oauth_token)
+            }
+            response = requests.get(url, headers=headers)
+            print(response)
 
             # Parse the JSON response to get the user's email
             email = response.json()['email']
@@ -274,7 +287,11 @@ class Gitlab_MR_Merged_Label_webhookAPIView(generics.GenericAPIView):
                 print(f'Access token: {oauth_token}')
             url = 'https://gitlab.com/api/v4/user'
             # Send the request to the GitLab API
-            response = requests.get(f'{url}?private_token={oauth_token}')
+            headers = {
+                "Authorization": "Bearer {}".format(oauth_token)
+            }
+            response = requests.get(url, headers=headers)
+            print(response)
 
             # Parse the JSON response to get the user's email
             email = response.json()['email']
@@ -380,7 +397,11 @@ class Gitlab_MR_Merged_Notif_webhookAPIView(generics.GenericAPIView):
                 print(f'Access token: {oauth_token}')
             url = 'https://gitlab.com/api/v4/user'
             # Send the request to the GitLab API
-            response = requests.get(f'{url}?private_token={oauth_token}')
+            headers = {
+                "Authorization": "Bearer {}".format(oauth_token)
+            }
+            response = requests.get(url, headers=headers)
+            print(response)
 
             # Parse the JSON response to get the user's email
             email = response.json()['email']

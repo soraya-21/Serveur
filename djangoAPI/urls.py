@@ -41,6 +41,7 @@ urlpatterns = [
     path('mailsender/', include('mailsender.urls')),
     path('reddit/', include('reddit.urls')),
     path('linkedin_app/', include('linkedin_app.urls')),
+    path('slack_app/', include('slack_app.urls')),
     path('spotifyyy_app_playlist/', include('spotify_app_playlist.urls')),
     path('spotifyyy_app_following/', include('spotify_app_following.urls')),
     path('social_auth/', include(('social_auth.urls', 'social_auth'), namespace='social_auth')),
