@@ -30,7 +30,7 @@ class reddit_webhookAPIView(generics.GenericAPIView):
             except:
                 return HttpResponse("No code found", status=400)
             print(f"code ====> {reponse_data['code']}")
-            print(f"email ====> {reponse_data['email']}")
+            # print(f"email ====> {reponse_data['email']}")
             token_endpoint = "https://www.reddit.com/api/v1/access_token"
             auth_header = requests.auth.HTTPBasicAuth(self.client_id, self.client_secret)
             auth_data = {
