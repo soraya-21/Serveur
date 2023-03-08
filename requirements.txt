@@ -29,7 +29,6 @@ python-dateutil==2.7.0
 django_heroku==0.3.1
 dj-database-url==1.2.0
 psycopg2-binary==2.9.5
-google-api-python-client==1.31.5
 google-auth-oauthlib==1.0.0
 redis==4.5.1
 slack_sdk==3.20.0
