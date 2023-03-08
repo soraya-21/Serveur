@@ -14,8 +14,9 @@ from areaServer.models import User
 # Create your views here.
 # get user information via access token, check if user in db, stock token and refresh token, refresh avant chaque area  
 # oauth_token = ''
-artist_name = "Passenger"
+# artist_name = "Passenger"
 
+user_email  = None
 class spotify_following_webhookAPIView(generics.GenericAPIView):
     serializer_class = Spotify_following_Serializer
 
@@ -55,9 +56,10 @@ class spotify_following_webhookAPIView(generics.GenericAPIView):
         }
         response = requests.get(url, headers=headers)
         print(response.json())
-        self.user_email = response.json()["email"]
+        global user_email
+        user_email = response.json()["email"]
         
-        user = User.objects.filter(email=self.user_email).first()
+        user = User.objects.filter(email=user_email).first()
         if not user:
             return ("User not in db")
         else:
@@ -67,7 +69,7 @@ class spotify_following_webhookAPIView(generics.GenericAPIView):
             }
             user.save()
                 
-        return oauth_token, refresh_token, self.user_email
+        return oauth_token, refresh_token, user_email
     
     def get_token_in_db(self, user_email):
         user = User.objects.filter(email=user_email).first()
@@ -90,7 +92,8 @@ class spotify_following_webhookAPIView(generics.GenericAPIView):
         else:
             print("Error getting artist ID: {}".format(response.text))
 
-    def follow_artist(self, user_email, artist_name):
+    def follow_artist(self, artist_name):
+        global user_email
         access_token = self.get_token_in_db(user_email)
         artist_id = self.get_artist_id(access_token, artist_name)
         url = "https://api.spotify.com/v1/me/following?type=artist&ids={}".format(artist_id)

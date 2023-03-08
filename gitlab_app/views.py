@@ -22,6 +22,8 @@ from mailsender.views import mail_sender
 STATUS_RESOLVED = 'Resolved'
 STATUS_PROGRESS = 'In_progress'
 
+user_email = None
+ngrok_uri =  "https://252a-154-66-134-64.eu.ngrok.io"
 def get_token_in_db(self, user_email):
     user = User.objects.filter(email=user_email).first()
     oauth_token = user.gitlab_tokens["gitlab_access_token"]
@@ -80,21 +82,23 @@ class Gitlab_push_webhookAPIView(generics.GenericAPIView):
             print(response)
             # Parse the JSON response to get the user's email
             if response.status_code == 200:
-                email = response.json()['email']
-            #     user = User.objects.filter(email=email).first()
-            #     if not user:
-            #         return ("User not in db")
-            #     else:
-            #         user.gitlab_tokens = {
-            #             "gitlab_access_token" : oauth_token,
-            #             "gitlab_refresh_token" : refresh_token
-            #         }
-            #         user.save()
-            # else:
-            #     raise ValueError("Could retrieve user email")
+                global user_email
+                user_email = response.json()['email']
+                # global user_email
+                user = User.objects.filter(email=user_email).first()
+                if not user:
+                    return ("User not in db")
+                else:
+                    user.gitlab_tokens = {
+                        "gitlab_access_token" : oauth_token,
+                        "gitlab_refresh_token" : refresh_token
+                    }
+                    user.save()
+            else:
+                raise ValueError("Could retrieve user email")
             gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
             projects = gl.projects.list(owned=True)
-            webhook_url = " https://f957-41-138-89-210.ngrok.io/gitlab-webhook/push_rea"
+            webhook_url = f"{ngrok_uri}/gitlab-webhook/push_rea"
             for project in projects:
                 hook = project.hooks.create({
                     'url': webhook_url,
@@ -107,6 +111,7 @@ class Gitlab_push_webhookAPIView(generics.GenericAPIView):
         if request.method == "POST":
             payload = request.data
             try:
+                global user_email
                 user_email = payload["user_email"]
             except:
                 return HttpResponse("Couldn't get user email from payload")
@@ -181,8 +186,10 @@ class Gitlab_MR_Opened_webhookAPIView(generics.GenericAPIView):
             print(response)
 
             # Parse the JSON response to get the user's email
-            email = response.json()['email']
-            user = User.objects.filter(email=email).first()
+            global user_email
+            user_email = response.json()['email']
+            # global user_email
+            user = User.objects.filter(email=user_email).first()
             if not user:
                 return ("User not in db")
             else:
@@ -193,7 +200,7 @@ class Gitlab_MR_Opened_webhookAPIView(generics.GenericAPIView):
                 user.save()
             gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
             projects = gl.projects.list(owned=True)
-            webhook_url = "https://9463-156-0-212-43.ngrok.io/gitlab-webhook/mr_opened_rea"
+            webhook_url = f"{ngrok_uri}/gitlab-webhook/mr_opened_rea"
             for project in projects:
                 hook = project.hooks.create({
                     'url': webhook_url,
@@ -211,9 +218,11 @@ class Gitlab_MR_Opened_webhookAPIView(generics.GenericAPIView):
         if request.method == "POST":
             payload = request.data
             try:
+                global user_email
                 user_email = payload["user"]["email"]
             except:
                 return HttpResponse("Couldn't get user email from payload")
+            # global user_email
             oauth_token = get_token_in_db(user_email)
             if payload['object_kind'] == 'merge_request':
                 repo_meta = {
@@ -294,8 +303,10 @@ class Gitlab_MR_Merged_Label_webhookAPIView(generics.GenericAPIView):
             print(response)
 
             # Parse the JSON response to get the user's email
-            email = response.json()['email']
-            user = User.objects.filter(email=email).first()
+            global user_email
+            user_email = response.json()['email']
+            # global user_email
+            user = User.objects.filter(email=user_email).first()
             if not user:
                 return ("User not in db")
             else:
@@ -307,7 +318,7 @@ class Gitlab_MR_Merged_Label_webhookAPIView(generics.GenericAPIView):
 
             gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
             projects = gl.projects.list(owned=True)
-            webhook_url = "https://9463-156-0-212-43.ngrok.io/gitlab-webhook/change-label_rea"
+            webhook_url = f"{ngrok_uri}/gitlab-webhook/change-label_rea"
             for project in projects:
                 hook = project.hooks.create({
                     'url': webhook_url,
@@ -320,9 +331,11 @@ class Gitlab_MR_Merged_Label_webhookAPIView(generics.GenericAPIView):
         if request.method == "POST":
             payload = request.data
             try:
+                global user_email
                 user_email = payload["user"]["email"]
             except:
                 return HttpResponse("Couldn't get user email from payload")
+            # global user_email
             oauth_token = get_token_in_db(user_email)
             if payload['object_kind'] == 'merge_request':
                 repo_meta = {
@@ -404,8 +417,10 @@ class Gitlab_MR_Merged_Notif_webhookAPIView(generics.GenericAPIView):
             print(response)
 
             # Parse the JSON response to get the user's email
-            email = response.json()['email']
-            user = User.objects.filter(email=email).first()
+            global user_email
+            user_email = response.json()['email']
+            # global user_email
+            user = User.objects.filter(email=user_email).first()
             if not user:
                 return ("User not in db")
             else:
@@ -417,7 +432,7 @@ class Gitlab_MR_Merged_Notif_webhookAPIView(generics.GenericAPIView):
 
             gl = gitlab.Gitlab(url='https://gitlab.com', oauth_token=oauth_token)
             projects = gl.projects.list(owned=True)
-            webhook_url = "https://9463-156-0-212-43.ngrok.io/gitlab-webhook/merged-notif_rea"
+            webhook_url = f"{ngrok_uri}/gitlab-webhook/merged-notif_rea"
             for project in projects:
                 hook = project.hooks.create({
                     'url': webhook_url,
@@ -430,9 +445,11 @@ class Gitlab_MR_Merged_Notif_webhookAPIView(generics.GenericAPIView):
         if request.method == "POST":
             payload = request.data
             try:
+                global user_email
                 user_email = payload["user"]["email"]
             except:
                 return HttpResponse("Couldn't get user email from payload")
+            # global user_email
             oauth_token = get_token_in_db(user_email)
 
             if payload['object_kind'] == 'merge_request':

@@ -29,6 +29,14 @@ python-dateutil==2.7.0
 django_heroku==0.3.1
 dj-database-url==1.2.0
 psycopg2-binary==2.9.5
+google-api-python-client==1.31.5
 google-auth-oauthlib==1.0.0
 redis==4.5.1
-spotipy==2.22.1
+slack_sdk==3.20.0
+APScheduler==3.10.0
+pytz-deprecation-shim==0.1.0.post0
+tzdata==2022.7
+tzlocal==4.2
+beautifulsoup4==4.11.2
+bs4==0.0.1
+soupsieve==2.4

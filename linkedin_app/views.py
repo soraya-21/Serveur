@@ -17,7 +17,7 @@ from areaServer.models import User
 # Create your views here.
 
 oauth_token = ''
-user_email = "soraya.codo@epitech.eu"
+user_email = None
 API_ENDPOINT = "https://www.linkedin.com"
 
 class Linkedin_webhookAPIView(generics.GenericAPIView):
@@ -49,26 +49,27 @@ class Linkedin_webhookAPIView(generics.GenericAPIView):
                 return HttpResponse(f'Error: {response.json()}')
             else:
                 oauth_token = response.json()["access_token"]
-                # url = "https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))"
+                url = "https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))"
 
-                # headers = {
-                #     "Authorization": f"Bearer {oauth_token}",
-                #     "Content-Type": "application/json",
-                #     "X-Restli-Protocol-Version": "2.0.0"
-                # }
-                # response = requests.get(url, headers=headers)
-                # if response.status_code == 200:
-                #     data = json.loads(response.content)
-                #     email = data["elements"][0]["handle~"]["emailAddress"]
-                #     print("L'e-mail de l'utilisateur est :", email)
-                # else:
-                #     return HttpResponse("Erreur lors de la récupération de l'e-mail de l'utilisateur :", response.json())
-                # user = User.objects.filter(email=email).first()
-                # if not user:
-                #     return ("User not in db")
-                # else:
-                #     user.linkedin_token = oauth_token
-                #     user.save()
+                headers = {
+                    "Authorization": f"Bearer {oauth_token}",
+                    "Content-Type": "application/json",
+                    "X-Restli-Protocol-Version": "2.0.0"
+                }
+                response = requests.get(url, headers=headers)
+                if response.status_code == 200:
+                    data = json.loads(response.content)
+                    global user_email
+                    user_email = data["elements"][0]["handle~"]["emailAddress"]
+                    print("L'e-mail de l'utilisateur est :", user_email)
+                else:
+                    return HttpResponse("Erreur lors de la récupération de l'e-mail de l'utilisateur :", response.json())
+                user = User.objects.filter(email=user_email).first()
+                if not user:
+                    return ("User not in db")
+                else:
+                    user.linkedin_token = oauth_token
+                    user.save()
             return oauth_token
 
     def get_urn_id(self, access_token):
@@ -90,9 +91,11 @@ class Linkedin_webhookAPIView(generics.GenericAPIView):
             return HttpResponse("Erreur lors de la récupération de l'urn_id :", response.json())
         return urn_id
 
-    def send_post(self, access_token, description, video_link):
+    def send_post(self, video_title, video_link):
+        global user_email
+        access_token = self.get_token_in_db(user_email)
         urn_id = self.get_urn_id(access_token)
-        introdute_link = "Vous trouverez la video au lien suivant :"
+        introdute_link = f"Hello Guys. Je viens de poster une nouvelle video sur youtube. Elle a pour titre {video_title}. Vous trouverez la video au lien suivant :"
         url = "https://api.linkedin.com/v2/ugcPosts"
 
         headers = {
@@ -107,7 +110,7 @@ class Linkedin_webhookAPIView(generics.GenericAPIView):
             "specificContent": {
                 "com.linkedin.ugc.ShareContent": {
                     "shareCommentary": {
-                        "text": f"{description}\n {introdute_link}\n{video_link}"
+                        "text": f"{introdute_link}\n{video_link}\n. J'espere que vous apprecierez. Tout vos apports seront les bienvenus"
                     },
                     "shareMediaCategory": "NONE"
                 }
@@ -130,10 +133,8 @@ class Linkedin_webhookAPIView(generics.GenericAPIView):
         return oauth_token
 
     def get(self, request):
-        description = "blablabla description de la video"
-        video_link = "https://www.hahahaha.com"
         access_token = self.get_token(request)
-        self.send_post(access_token, description, video_link)
+        # self.send_post(access_token, description, video_link)
         return Response({'msg', 'getting auth code'})        
 
     def post(self, request):

@@ -14,8 +14,8 @@ from areaServer.models import User
 # Create your views here.
 
 # oauth_token = ''
-song_name = "it's you"
-user_email = "soraya.codo@epitech.eu"
+# song_name = "it's you"
+user_email = None
 playlist_name = "Youtube Liked Songs"
 
 class spotify_webhookAPIView(generics.GenericAPIView):
@@ -55,6 +55,7 @@ class spotify_webhookAPIView(generics.GenericAPIView):
             "Authorization": "Bearer {}".format(oauth_token)
         }
         response = requests.get(url, headers=headers)
+        global user_email
         user_email = response.json()["email"]
         
         user = User.objects.filter(email=user_email).first()
@@ -122,7 +123,8 @@ class spotify_webhookAPIView(generics.GenericAPIView):
         else:
             print("Error creating playlist: {}".format(response.text))
 
-    def add_song_to_playlist(self, user_email, song_name):
+    def add_song_to_playlist(self, song_name):
+        global user_email
         access_token = self.get_token_in_db(self, user_email)
         playlist_id = None
         song_uri = self.get_song_uri(access_token, song_name)

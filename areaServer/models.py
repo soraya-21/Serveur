@@ -43,6 +43,9 @@ class User(AbstractBaseUser,PermissionsMixin):
     linkedin_token = models.CharField(max_length=255, blank=False, null=True)    
     reddit_tokens = models.JSONField(default=dict, null=True)
     gitlab_tokens = models.JSONField(default=dict, null=True)
+    click_up_token = models.CharField(max_length=255, blank=False, null=True)
+    slack_token = models.CharField(max_length=255, blank=False, null=True)
+
 
  
     USERNAME_FIELD = 'email'
