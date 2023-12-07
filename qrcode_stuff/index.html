@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info Frontend</title>
+</head>
+<body>
+
+<h1>User Information</h1>
+<div id="user-info"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Récupérez l'ID de l'utilisateur depuis l'URL
+    const userId = getUserIdFromUrl();
+
+    // Effectuez une requête à l'API backend pour récupérer les informations de l'utilisateur
+    fetch(`https://http://127.0.0.1:5000/api/get_member/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Affichez les informations de l'utilisateur sur la page
+            displayUserInfo(data);
+        })
+        .catch(error => {
+            console.error('Error fetching user information:', error);
+        });
+});
+
+function getUserIdFromUrl() {
+    // Récupère l'ID de l'utilisateur depuis l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('user_id');
+}
+
+function displayUserInfo(userInfo) {
+    // Affiche les informations de l'utilisateur dans la div user-info
+    const userInfoDiv = document.getElementById('user-info');
+    userInfoDiv.innerHTML = `
+        <p><strong>Nom:</strong> ${userInfo.Nom}</p>
+        <p><strong>Prénoms:</strong> ${userInfo.Prénoms}</p>
+        <p><strong>Adresse:</strong> ${userInfo.Adresse}</p>
+        <p><strong>Téléphone:</strong> ${userInfo.Téléphone}</p>
+        <p><strong>Email:</strong> ${userInfo.Email}</p>
+        <p><strong>A propos:</strong> ${userInfo["A propos"]}</p>
+        <p><strong>Lien réseaux sociaux:</strong> ${userInfo["Lien réseaux sociaux"]}</p>
+        <p><strong>Photo:</strong> <img src="${userInfo.Photo}" alt="Photo de l'utilisateur"></p>
+    `;
+}
+</script>
+
+</body>
+</html>
